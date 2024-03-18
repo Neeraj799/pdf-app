@@ -1,0 +1,9 @@
+.pdfContainer {
+    padding: 50px;
+    background-color: #dedede;
+    margin-top: 50px;
+}
+
+.react-pdf__Page__canvas {
+    margin-bottom: 40px;
+}
