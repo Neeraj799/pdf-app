@@ -15,6 +15,7 @@ const PdfHandler = () => {
     const [file, setFile] = useState("");
     const [allImages, setAllImages] = useState(null)
     const [pdfFile, setPdfFile] = useState(null);
+    const [downloadFile, setDownloadFile] = useState(null)
 
     useEffect(() => {
         getPdf();
@@ -28,6 +29,7 @@ const PdfHandler = () => {
         setAllImages(result.data.data);
     }
 
+    // Handle the form submission when user uploads a pdf. Creates a FormData containing the title and file, then append them to the form data. 
     const submitImage = async (e) => {
         e.preventDefault();
         const formData = new FormData();
@@ -35,6 +37,7 @@ const PdfHandler = () => {
         formData.append("file", file);
         console.log(title, file)
 
+        // Send a post request to the server
         const response = await axios.post("/upload", formData, {
             headers: { "Content-Type": "multipart/form-data" }
         }
@@ -46,29 +49,32 @@ const PdfHandler = () => {
         }
     }
 
+    // Display the pdf
     const showPdf = (pdf) => {
-
-        setPdfFile(`http://localhost:8000/files/${pdf}`)
+        const filename = pdf.split('/').pop();
+        const pdfFilePath = `http://localhost:8000/files/${pdf}`;
+        setPdfFile(pdfFilePath);
+        console.log('pdfFile:', pdfFilePath);
+        setDownloadFile(filename)
     }
 
     const downloadSelectedPages = async (selectedPages) => {
         try {
-            const response = await axios.post('/extract', { pages: selectedPages, pdfFile: pdfFile }, {
-                responseType: 'blob',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'Accept': 'application/pdf'
-                }
-            });
-            const blob = new Blob([response.data], { type: 'application/pdf' });
-            const url = window.URL.createObjectURL(blob);
+            // Send a POST request to the server to extract selected pages from the pdf file
+            const response = await axios.post('/extract', { pages: selectedPages, pdfFile: downloadFile }, { responseType: 'arraybuffer' });
+            console.log(response.data)
+            //Create a Blob object from the response data containing the extracted pdf
+            const downloadBlob = new Blob([response.data], { type: 'application/pdf' });
+            const downloadUrl = window.URL.createObjectURL(downloadBlob);
+
             const link = document.createElement('a');
-            link.href = url;
-            link.setAttribute('download', 'extracted.pdf');
+            link.href = downloadUrl;
+            link.download = 'extracted.pdf';
             document.body.appendChild(link);
             link.click();
             document.body.removeChild(link);
         } catch (error) {
+            // Handle any errors that occur during the download process
             console.error('Error downloading selected pages:', error);
         }
     };

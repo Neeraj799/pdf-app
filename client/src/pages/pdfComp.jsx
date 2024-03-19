@@ -12,22 +12,24 @@ function PdfComp(props) {
     }
 
     const handlePageSelection = (page) => {
+        //Checks if the selectedPages array already includes current page number
         if (selectedPages.includes(page)) {
+            //If page is already selected this line removes the page from the selectedPages
             setSelectedPages(selectedPages.filter((p) => p !== page));
         } else {
+            //Adding the clicked page to the selected pages list
             setSelectedPages([...selectedPages, page]);
         }
     }
 
     const handleDownloadSelected = () => {
+        // Checks if the downloadSelectedPages function is provided as a prop.
         if (props.downloadSelectedPages) {
-            if (selectedPages && selectedPages.length > 0) {
-                props.downloadSelectedPages(selectedPages);
-            } else {
-                console.error('selectedPages is empty or undefined');
-            }
+
+            //If provided calls the function selectedPages as an argument
+            props.downloadSelectedPages(selectedPages);
         } else {
-            console.error('downloadSelectedPages prop not provided');
+            console.log('downloadSelectedPages props not provided')
         }
     }
 
@@ -36,7 +38,9 @@ function PdfComp(props) {
             <p>
                 Page {pageNumber} of {numPages}
             </p>
+
             <Document file={props.pdfFile} onLoadSuccess={onDocumentLoadSuccess}>
+
                 {Array.apply(null, Array(numPages))
                     .map((x, i) => i + 1)
                     .map((page) => {
@@ -46,7 +50,7 @@ function PdfComp(props) {
                                     checked={selectedPages.includes(page)}
                                     onChange={() => handlePageSelection(page)}
                                 />
-                                < Page
+                                <Page
                                     pageNumber={page}
                                     renderTextLayer={false}
                                     renderAnnotationLayer={false}
