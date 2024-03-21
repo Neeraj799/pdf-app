@@ -1,7 +1,7 @@
 const User = require('../models/userModel')
 const { hashPassword, comparePassword } = require('../helpers/auth')
 
-const test = (req, res) => {
+const getUser = (req, res) => {
     res.json('test is working')
 }
 
@@ -72,6 +72,7 @@ const loginUser = async (req, res) => {
                 error: "Passwords do not match"
             })
         }
+
     } catch (error) {
         console.log(error)
     }
@@ -82,7 +83,7 @@ const loginUser = async (req, res) => {
 
 
 module.exports = {
-    test,
+    getUser,
     registerUser,
     loginUser
 

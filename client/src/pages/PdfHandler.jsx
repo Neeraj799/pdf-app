@@ -24,7 +24,7 @@ const PdfHandler = () => {
     // Get all the pdf files
 
     const getPdf = async () => {
-        const result = await axios.get("/getfiles");
+        const result = await axios.get("/pdf/getfiles");
         console.log(result.data.data);
         setAllImages(result.data.data);
     }
@@ -38,7 +38,7 @@ const PdfHandler = () => {
         console.log(title, file)
 
         // Send a post request to the server
-        const response = await axios.post("/upload", formData, {
+        const response = await axios.post("/pdf/upload", formData, {
             headers: { "Content-Type": "multipart/form-data" }
         }
         );
@@ -61,7 +61,7 @@ const PdfHandler = () => {
     const downloadSelectedPages = async (selectedPages) => {
         try {
             // Send a POST request to the server to extract selected pages from the pdf file
-            const response = await axios.post('/extract', { pages: selectedPages, pdfFile: downloadFile }, { responseType: 'arraybuffer' });
+            const response = await axios.post('/pdf/extract', { pages: selectedPages, pdfFile: downloadFile }, { responseType: 'arraybuffer' });
             console.log(response.data)
             //Create a Blob object from the response data containing the extracted pdf
             const downloadBlob = new Blob([response.data], { type: 'application/pdf' });

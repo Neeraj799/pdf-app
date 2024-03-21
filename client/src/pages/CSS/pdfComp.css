@@ -1,9 +1,28 @@
 .pdfContainer {
-    padding: 50px;
-    background-color: #dedede;
-    margin-top: 50px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
 }
 
-.react-pdf__Page__canvas {
-    margin-bottom: 40px;
+.pdfViewer {
+    border: 2px solid #0f0f0f;
+    padding: 10px;
+    margin: 60px 0px;
+}
+
+.checkbox {
+    position: relative;
+    bottom: 70px;
+}
+
+.pdfViewer .react-pdf__Page {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+.pdfControls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
 }

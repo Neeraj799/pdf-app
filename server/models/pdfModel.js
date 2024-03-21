@@ -1,8 +1,10 @@
 const mongoose = require("mongoose");
 
-const PdfDetailsSchema = new mongoose.Schema({
+const pdfSchema = new mongoose.Schema({
     pdf: String,
     title: String
 }, { collection: "PdfDetails" })
 
-const pdfModel = mongoose.model("PdfDetails", PdfDetailsSchema)
+const PdfModel = mongoose.model("PdfDetails", pdfSchema)
+
+module.exports = PdfModel
