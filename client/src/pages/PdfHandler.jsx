@@ -3,6 +3,7 @@ import './CSS/PdfHandler.css'
 import axios from 'axios';
 import { pdfjs } from 'react-pdf';
 import PdfComp from './pdfComp';
+import Navbar from '../components/Navbar/Navbar';
 
 // This is to display the pdf
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -80,38 +81,41 @@ const PdfHandler = () => {
     };
 
     return (
-        <div className='mainContainer'>
-            <form className='formStyle' onSubmit={submitImage}>
-                <h4>Upload your pdf file</h4>
-                <input type="text"
-                    className='form-control'
-                    placeholder='Title'
-                    required
-                    onChange={(e) => setTitle(e.target.value)}
-                />
-                <input type="file"
-                    className='form-control'
-                    accept='application/pdf'
-                    required
-                    onChange={(e) => setFile(e.target.files[0])}
-                />
-                <button className='btn btn-primary' type='submit'>Submit</button>
-            </form>
+        <div>
+            <Navbar />
+            <div className='mainContainer'>
+                <form className='formStyle' onSubmit={submitImage}>
+                    <h4>Upload your pdf file</h4>
+                    <input type="text"
+                        className='form-control'
+                        placeholder='Title'
+                        required
+                        onChange={(e) => setTitle(e.target.value)}
+                    />
+                    <input type="file"
+                        className='form-control'
+                        accept='application/pdf'
+                        required
+                        onChange={(e) => setFile(e.target.files[0])}
+                    />
+                    <button className='btn btn-primary' type='submit'>Submit</button>
+                </form>
 
-            <div className="uploaded">
-                <h4>Uploaded PDF:</h4>
-                <div className="output-div">
-                    {allImages == null ? "" : allImages.map((data) => {
-                        return (
-                            <div className="inner-div" key={data.pdf}>
-                                <h6>Title: {data.title}</h6>
-                                <button className="btn btn-primary" onClick={() => showPdf(data.pdf)}> Show Pdf </button>
-                            </div>
-                        );
-                    })}
+                <div className="uploaded">
+                    <h4>Uploaded PDF:</h4>
+                    <div className="output-div">
+                        {allImages == null ? "" : allImages.map((data) => {
+                            return (
+                                <div className="inner-div" key={data.pdf}>
+                                    <h6>Title: {data.title}</h6>
+                                    <button className="btn btn-primary" onClick={() => showPdf(data.pdf)}> Show Pdf </button>
+                                </div>
+                            );
+                        })}
+                    </div>
                 </div>
+                <PdfComp pdfFile={pdfFile} downloadSelectedPages={downloadSelectedPages} />
             </div>
-            <PdfComp pdfFile={pdfFile} downloadSelectedPages={downloadSelectedPages} />
         </div>
 
 

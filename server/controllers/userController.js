@@ -1,5 +1,5 @@
 const User = require('../models/userModel')
-const { hashPassword, comparePassword } = require('../helpers/auth')
+const { hashPassword, comparePassword, generateToken } = require('../helpers/auth')
 
 const getUser = (req, res) => {
     res.json('test is working')
@@ -64,19 +64,24 @@ const loginUser = async (req, res) => {
 
         //Check if passwords match
         const match = await comparePassword(password, user.password)
-        if (match) {
-            res.json('passwords match')
-        }
+
         if (!match) {
             res.json({
                 error: "Passwords do not match"
             })
         }
-
+        // Generate and return a JWT token
+        const token = generateToken({ userId: user._id });
+        res.json({ token });
     } catch (error) {
-        console.log(error)
+        console.log(error);
     }
 }
+
+const logoutUser = (req, res) => {
+    // Clear the JWT token from the client-side (local storage)
+    res.json({ message: 'Logout successful' });
+};
 
 
 
@@ -85,6 +90,7 @@ const loginUser = async (req, res) => {
 module.exports = {
     getUser,
     registerUser,
-    loginUser
+    loginUser,
+    logoutUser
 
 }

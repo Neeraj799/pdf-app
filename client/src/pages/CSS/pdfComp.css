@@ -6,23 +6,40 @@
 }
 
 .pdfViewer {
-    border: 2px solid #0f0f0f;
+    border: 2px solid #ccc;
     padding: 10px;
-    margin: 60px 0px;
-}
-
-.checkbox {
-    position: relative;
-    bottom: 70px;
+    margin-bottom: 20px;
 }
 
 .pdfViewer .react-pdf__Page {
     max-width: 100%;
-    max-height: 100%;
+}
+
+.checkbox {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.checkbox input[type="checkbox"] {
+    margin-right: 5px;
 }
 
 .pdfControls {
     display: flex;
     align-items: center;
     gap: 10px;
+}
+
+.pdfControls button {
+    padding: 10px 20px;
+    background-color: #1dbf73;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.pdfControls button:hover {
+    background-color: #17a267;
 }

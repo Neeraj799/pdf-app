@@ -17,7 +17,6 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage: storage });
 
-
 // Define your PDF routes here
 router.post('/upload', upload.single('file'), uploadPdf);
 router.get('/getfiles', getAllFiles);

@@ -1,55 +1,68 @@
-import React, { useState } from 'react'
-import axios from 'axios'
-import { toast } from 'react-hot-toast'
-import { useNavigate } from 'react-router-dom'
-import './CSS/Login.css'
+import React, { useState } from 'react';
+import axios from 'axios';
+import { toast } from 'react-hot-toast';
+import { useNavigate } from 'react-router-dom';
+import './CSS/Login.css';
 
 const Login = () => {
-    const navigate = useNavigate()
-
+    const navigate = useNavigate();
     const [data, setData] = useState({
         email: '',
         password: '',
-    })
+    });
 
     const loginUser = async (e) => {
-        e.preventDefault()
-
-        const { email, password } = data
+        e.preventDefault();
+        const { email, password } = data;
 
         try {
             const { data } = await axios.post('/login', {
                 email,
-                password
+                password,
             });
             if (data.error) {
-                toast.error(data.error)
+                toast.error(data.error);
             } else {
-                setData({});
-                navigate('/')
+                const { token } = data;
+                localStorage.setItem('token', token);
+                toast.success('Logged in successfully');
+                navigate('/');
             }
         } catch (error) {
-            console.log(error)
+            console.log(error);
         }
-    }
+    };
 
     return (
-        <div className='login'>
-            <form onSubmit={loginUser}>
+        <div className='login-container'>
+            <form onSubmit={loginUser} className='login-form'>
                 <h1>SIGN IN</h1>
-                <div className='header'>
-                    <label>Email</label>
+                <div className='input-group'>
+                    <label htmlFor='email'>Email</label>
+                    <input
+                        type='text'
+                        id='email'
+                        name='email'
+                        placeholder='Enter your email'
+                        value={data.email}
+                        onChange={(e) => setData({ ...data, email: e.target.value })}
+                    />
                 </div>
-                <input type="text" placeholder='Enter your email' value={data.email} onChange={(e) => setData({ ...data, email: e.target.value })} />
-                <div className='header'>
-                    <label>Password</label>
+                <div className='input-group'>
+                    <label htmlFor='password'>Password</label>
+                    <input
+                        type='password'
+                        id='password'
+                        name='password'
+                        placeholder='Enter your password'
+                        value={data.password}
+                        onChange={(e) => setData({ ...data, password: e.target.value })}
+                    />
                 </div>
-
-                <input type="password" placeholder='Enter your password' value={data.password} onChange={(e) => setData({ ...data, password: e.target.value })} />
-                <button>Submit</button>
+                <button type='submit'>Submit</button>
             </form>
         </div>
-    )
-}
+    );
+};
 
-export default Login
+export default Login;
