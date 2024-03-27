@@ -16,20 +16,19 @@ const Login = () => {
         const { email, password } = data;
 
         try {
-            const { data } = await axios.post('/login', {
-                email,
-                password,
-            });
-            if (data.error) {
-                toast.error(data.error);
-            } else {
-                const { token } = data;
+            const response = await axios.post('/login', { email, password });
+            const { token } = response.data;
+
+            if (token) {
                 localStorage.setItem('token', token);
                 toast.success('Logged in successfully');
                 navigate('/');
+            } else {
+                toast.error(response.data.error || 'Login failed');
             }
         } catch (error) {
-            console.log(error);
+            console.error('Error logging in:', error);
+            toast.error('An error occurred while logging in');
         }
     };
 

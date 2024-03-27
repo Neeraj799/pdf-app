@@ -2,7 +2,10 @@ const express = require('express');
 const router = express.Router();
 const multer = require('multer');
 const path = require('path');
-const { uploadPdf, getAllFiles, extractPages } = require('../controllers/pdfController')
+const { uploadPdf, getAllFiles, extractPages } = require('../controllers/pdfController');
+const { validateUser } = require('../middlewares/authMiddleware');
+
+
 
 // Configure disk storage for multer
 const storage = multer.diskStorage({
@@ -19,7 +22,7 @@ const upload = multer({ storage: storage });
 
 // Define your PDF routes here
 router.post('/upload', upload.single('file'), uploadPdf);
-router.get('/getfiles', getAllFiles);
+router.get('/getfiles', validateUser, getAllFiles);
 router.post('/extract', extractPages);
 
 module.exports = router;

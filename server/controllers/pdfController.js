@@ -24,14 +24,12 @@ const uploadPdf = async (req, res) => {
 // Get all files
 const getAllFiles = async (req, res) => {
     try {
-        // Find all documents in the PdfModel collection
-        PdfModel.find({}).then((data) => {
-            // Respond with success status and data if documents are found
-            res.send({ status: 'ok', data: data });
-        });
+        const userId = req.user.userId;
+        const pdfs = await PdfModel.find({ user: userId });
+
+        res.json({ data: pdfs })
     } catch (error) {
-        // Log any errors that occur during the process
-        console.log(error);
+        res.status(500).json({ error: 'Internal server error' })
     }
 };
 
@@ -82,12 +80,12 @@ const extractPages = async (req, res) => {
             res.setHeader('Content-Length', newPdfBytes.length);
             res.end(newPdfBytes);
         } catch (err) {
-            // Handle errors that occur while loading the PDF file or creating the new PDF
+
             console.error('Error extracting pages:', err);
             return res.status(500).json({ error: 'An error occurred while extracting pages' });
         }
     } catch (err) {
-        // Handle other errors that may occur
+
         console.error('Error extracting pages:', err);
         res.status(500).json({ error: 'An error occurred while extracting pages' });
     }

@@ -1,5 +1,6 @@
 const User = require('../models/userModel')
-const { hashPassword, comparePassword, generateToken } = require('../helpers/auth')
+const { hashPassword, comparePassword } = require('../helpers/auth')
+const jwt = require('jsonwebtoken');
 
 const getUser = (req, res) => {
     res.json('test is working')
@@ -71,12 +72,23 @@ const loginUser = async (req, res) => {
             })
         }
         // Generate and return a JWT token
-        const token = generateToken({ userId: user._id });
-        res.json({ token });
+        const token = jwt.sign({
+
+            userId: user._id
+        },
+            process.env.JWT_SECRET,
+            {
+                expiresIn: "1hr"
+            });
+        return res.json({ token })
     } catch (error) {
         console.log(error);
     }
+
 }
+
+
+
 
 const logoutUser = (req, res) => {
     // Clear the JWT token from the client-side (local storage)
