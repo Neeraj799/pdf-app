@@ -1,3 +1,70 @@
 .logoutButton {
+    position: relative;
+    left: 510px;
+    bottom: 50px;
     display: flex;
+    align-items: center;
+    width: 100px;
+    margin: 0 auto;
+}
+
+.logoutButton button {
+    background-color: #e53935;
+    color: #ffffff;
+    border: none;
+    border-radius: 40px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.logoutButton button:hover {
+    background-color: #c62828;
+}
+
+/* Media queries for different screen sizes */
+/* Tablets and smaller desktop screens */
+@media (max-width: 992px) {
+    .logoutButton {
+        left: 400px;
+        bottom: 40px;
+    }
+}
+
+/* Mobile devices */
+@media (max-width: 768px) {
+    .logoutButton {
+        position: static;
+        left: 0;
+        bottom: 0;
+        width: auto;
+        margin: 10px 0;
+    }
+
+    .logoutButton button {
+        padding: 8px 16px;
+        /* Keep the small button size */
+    }
+}
+
+/* Small mobile devices */
+@media (max-width: 480px) {
+    header {
+        height: 60px;
+        padding: 0 5px;
+    }
+
+    header h1 {
+        font-size: 18px;
+    }
+
+    .logoutButton button {
+        position: relative;
+        bottom: 40px;
+        left: 350px;
+        display: flex;
+        padding: 6px 8px;
+        width: 50px;
+        font-size: 10px;
+    }
 }

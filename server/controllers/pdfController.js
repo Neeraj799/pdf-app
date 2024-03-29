@@ -10,9 +10,10 @@ const uploadPdf = async (req, res) => {
     // Extract title and filename from request body and multer upload
     const title = req.body.title;
     const fileName = req.file.filename;
+    const userId = req.user.userId
     try {
         // Create a new document record in the database with title and filename
-        await PdfModel.create({ title: title, pdf: fileName });
+        await PdfModel.create({ title: title, pdf: fileName, user: userId });
         // Respond with success message if document creation is successful
         res.json({ status: 'ok' });
     } catch (error) {
@@ -24,11 +25,17 @@ const uploadPdf = async (req, res) => {
 // Get all files
 const getAllFiles = async (req, res) => {
     try {
+        // Get the user ID from the authenticated user
         const userId = req.user.userId;
-        const pdfs = await PdfModel.find({ user: userId });
 
+        // Find all PDF documents associated with the user
+        const pdfs = await PdfModel.find({ user: userId });
+        console.log(pdfs)
+
+        // Respond with the PDF documents as data
         res.json({ data: pdfs })
     } catch (error) {
+        // Respond with an internal server error if any error occurs
         res.status(500).json({ error: 'Internal server error' })
     }
 };
@@ -80,12 +87,12 @@ const extractPages = async (req, res) => {
             res.setHeader('Content-Length', newPdfBytes.length);
             res.end(newPdfBytes);
         } catch (err) {
-
+            // Handle errors that occur while loading the PDF file or creating the new PDF
             console.error('Error extracting pages:', err);
             return res.status(500).json({ error: 'An error occurred while extracting pages' });
         }
     } catch (err) {
-
+        // Handle other errors that may occur
         console.error('Error extracting pages:', err);
         res.status(500).json({ error: 'An error occurred while extracting pages' });
     }

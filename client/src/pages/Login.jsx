@@ -21,6 +21,7 @@ const Login = () => {
 
             if (token) {
                 localStorage.setItem('token', token);
+                console.log(token)
                 toast.success('Logged in successfully');
                 navigate('/');
             } else {

@@ -1,108 +1,78 @@
-const User = require('../models/userModel')
-const { hashPassword, comparePassword } = require('../helpers/auth')
+const User = require('../models/userModel');
+const { hashPassword, comparePassword } = require('../helpers/auth');
 const jwt = require('jsonwebtoken');
 
+// GET endpoint for testing
 const getUser = (req, res) => {
-    res.json('test is working')
-}
+    res.json('test is working');
+};
 
-//Register endpoint
+// Register endpoint
 const registerUser = async (req, res) => {
     try {
         const { name, email, password } = req.body;
 
-        //Check if name was entered
+        // Check if name was entered
         if (!name) {
-            return res.json({
-                error: 'name is required'
-            })
-        };
-
-        //Check is password is good
-        if (!password || password.length < 6) {
-            return res.json({
-                error: 'Password is required and should be atleast 6 characters long'
-            })
-        };
-
-        //Check email
-        const exist = await User.findOne({ email });
-        if (exist) {
-            return res.json({
-                error: 'Email is taken already'
-            })
+            return res.status(400).json({ error: 'Name is required' });
         }
 
-        const hashedPassword = await hashPassword(password)
+        // Check if password is valid
+        if (!password || password.length < 6) {
+            return res.status(400).json({ error: 'Password is required and should be at least 6 characters long' });
+        }
 
-        // Create user in database
+        // Check if email already exists
+        const exist = await User.findOne({ email });
+        if (exist) {
+            return res.status(400).json({ error: 'Email is already taken' });
+        }
 
-        const user = await User.create({
-            name,
-            email,
-            password: hashedPassword,
-        })
+        // Hash the password
+        const hashedPassword = await hashPassword(password);
 
-        return res.json(user)
+        // Create user in the database
+        const user = await User.create({ name, email, password: hashedPassword });
 
+        // Return the user object (without the password)
+        return res.status(201).json({ user: { name: user.name, email: user.email, _id: user._id } });
     } catch (error) {
-        console.log(error)
+        // Handle any other errors
+        console.error(error);
+        return res.status(500).json({ error: 'Internal server error' });
     }
-}
+};
 
 // Login endpoint
 const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
 
-        //Check if the user exists
+        // Check if the user exists
         const user = await User.findOne({ email });
         if (!user) {
-            return res.json({
-                error: 'No user found'
-            })
+            return res.status(400).json({ error: 'No user found with this email' });
         }
 
-        //Check if passwords match
-        const match = await comparePassword(password, user.password)
-
+        // Check if passwords match
+        const match = await comparePassword(password, user.password);
         if (!match) {
-            res.json({
-                error: "Passwords do not match"
-            })
+            return res.status(400).json({ error: 'Incorrect password' });
         }
+
         // Generate and return a JWT token
-        const token = jwt.sign({
-
-            userId: user._id
-        },
-            process.env.JWT_SECRET,
-            {
-                expiresIn: "1hr"
-            });
-        return res.json({ token })
+        const token = jwt.sign({ email: user.email, userId: user._id }, process.env.JWT_SECRET, { expiresIn: '1h' });
+        return res.status(200).json({ message: 'Login successful', email: user.email, userId: user._id, name: user.name, token });
     } catch (error) {
-        console.log(error);
+        // Handle any other errors
+        console.error(error);
+        return res.status(500).json({ error: 'Internal server error' });
     }
-
-}
-
-
-
+};
 
 const logoutUser = (req, res) => {
     // Clear the JWT token from the client-side (local storage)
     res.json({ message: 'Logout successful' });
 };
 
-
-
-
-
-module.exports = {
-    getUser,
-    registerUser,
-    loginUser,
-    logoutUser
-
-}
+module.exports = { getUser, registerUser, loginUser, logoutUser };

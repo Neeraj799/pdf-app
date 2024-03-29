@@ -3,6 +3,7 @@
     justify-content: center;
     align-items: center;
     flex-direction: column;
+    margin-top: 100px;
 }
 
 .pdfViewer {
@@ -16,19 +17,33 @@
 }
 
 .checkbox {
+    position: relative;
+    bottom: 40px;
+    right: 100px;
     display: flex;
     align-items: center;
-    margin-bottom: 10px;
+
 }
 
-.checkbox input[type="checkbox"] {
-    margin-right: 5px;
+.checkbox input {
+    position: relative;
+    left: 10px;
+    display: flex;
+    height: 15px;
+}
+
+.checkbox div {
+    position: relative;
+    right: 50px;
+    width: 300px;
+    font-weight: 600;
 }
 
 .pdfControls {
     display: flex;
     align-items: center;
-    gap: 10px;
+    margin-left: 70px;
+    margin-bottom: 40px;
 }
 
 .pdfControls button {
@@ -37,9 +52,112 @@
     color: #fff;
     border: none;
     border-radius: 4px;
+    margin-top: 40px;
+    margin-left: 40px;
+    cursor: pointer;
+}
+
+.download-button {
+    position: relative;
+    right: 150px;
+    display: flex;
+    background-color: #1dbf73;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    margin-top: 10px;
     cursor: pointer;
 }
 
 .pdfControls button:hover {
     background-color: #17a267;
+}
+
+
+/* Media queries */
+@media (max-width: 1200px) {
+    .checkbox {
+        right: 50px;
+    }
+
+    .pdfControls {
+        margin-left: 20px;
+    }
+
+    .download-button {
+        right: 100px;
+    }
+}
+
+@media (max-width: 992px) {
+    .checkbox {
+        bottom: 20px;
+        right: 20px;
+    }
+
+    .pdfControls {
+        margin-left: 0;
+        margin-bottom: 20px;
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+
+    .pdfControls button {
+        margin-top: 20px;
+        margin-left: 20px;
+    }
+
+    .download-button {
+        right: 0;
+        margin-top: 20px;
+    }
+}
+
+@media (max-width: 768px) {
+    .pdfContainer {
+        margin-top: 50px;
+    }
+
+    .checkbox {
+        bottom: 10px;
+        right: 10px;
+    }
+
+    .checkbox div {
+        width: 200px;
+    }
+
+    .pdfControls button,
+    .download-button {
+        padding: 8px 16px;
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+    .pdfViewer {
+        padding: 5px;
+    }
+
+    .checkbox {
+        top: 10px;
+        right: 5px;
+    }
+
+    .pdfViewer .react-pdf__Page {
+        max-width: 40%;
+    }
+
+    .checkbox div {
+        display: flex;
+        width: 250px;
+        font-size: 12px;
+    }
+
+    .pdfControls button,
+    .download-button {
+        padding: 6px 0px;
+        font-size: 12px;
+    }
+
 }

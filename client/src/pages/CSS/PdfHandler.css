@@ -4,6 +4,7 @@
     align-items: center;
     padding-top: 30px;
     flex-direction: column;
+    background-color: whitesmoke;
 }
 
 .formStyle {
@@ -62,4 +63,50 @@
 
 .inner-div button {
     margin-top: 10px;
+}
+
+/* Media queries */
+@media (max-width: 1200px) {
+    .formStyle {
+        width: 60%;
+    }
+}
+
+@media (max-width: 992px) {
+    .formStyle {
+        width: 70%;
+    }
+
+    .inner-div {
+        flex: 0 0 45%;
+    }
+}
+
+@media (max-width: 768px) {
+    .formStyle {
+        width: 80%;
+    }
+
+    .inner-div {
+        flex: 0 0 100%;
+    }
+}
+
+@media (max-width: 576px) {
+    .formStyle {
+        width: 90%;
+    }
+
+    .form-control,
+    .btn {
+        font-size: 14px;
+    }
+}
+
+@media (max-width: 480px) {
+
+    .form-control,
+    .btn {
+        font-size: 12px;
+    }
 }

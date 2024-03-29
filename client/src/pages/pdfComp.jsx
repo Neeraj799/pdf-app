@@ -3,19 +3,23 @@ import { Document, Page } from 'react-pdf';
 import './CSS/pdfComp.css';
 
 function PdfComp(props) {
+    // State variables
     const [numPages, setNumPages] = useState();
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedPages, setSelectedPages] = useState([]);
 
+    // Reset selected pages and current page when PDF file changes
     useEffect(() => {
         setCurrentPage(1);
         setSelectedPages([]);
     }, [props.pdfFile]);
 
+    // Function called when the PDF is successfully loaded
     function onDocumentLoadSuccess({ numPages }) {
         setNumPages(numPages);
     }
 
+    // Function to handle selection of pages
     const handlePageSelection = (page) => {
         if (selectedPages.includes(page)) {
             setSelectedPages(selectedPages.filter((p) => p !== page));
@@ -24,6 +28,7 @@ function PdfComp(props) {
         }
     };
 
+    // Function to handle download of selected pages
     const handleDownloadSelected = () => {
         if (props.downloadSelectedPages) {
             props.downloadSelectedPages(selectedPages);
@@ -58,9 +63,10 @@ function PdfComp(props) {
                         checked={selectedPages.includes(currentPage)}
                         onChange={() => handlePageSelection(currentPage)}
                     />
-                    Select current page
+                    <div>Select current page</div>
+
                 </div>
-                <button onClick={handleDownloadSelected}>Download Selected Pages</button>
+                <button className='download-button' onClick={handleDownloadSelected}>Download</button>
             </div>
         </div>
     );

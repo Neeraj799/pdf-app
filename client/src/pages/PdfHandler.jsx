@@ -4,6 +4,7 @@ import axios from 'axios';
 import { pdfjs } from 'react-pdf';
 import PdfComp from './pdfComp';
 import Navbar from '../components/Navbar/Navbar';
+import toast from 'react-hot-toast';
 
 // This is to display the pdf
 pdfjs.GlobalWorkerOptions.workerSrc = new URL(
@@ -18,17 +19,39 @@ const PdfHandler = () => {
     const [pdfFile, setPdfFile] = useState(null);
     const [downloadFile, setDownloadFile] = useState(null)
 
+
     useEffect(() => {
         getPdf();
     }, []);
 
-    // Get all the pdf files
 
+    const getAuthHeaders = () => {
+        const token = localStorage.getItem('token');
+        console.log('Token:', token)
+        return {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        };
+    };
+
+    // Get all the pdf files
     const getPdf = async () => {
-        const result = await axios.get("/pdf/getfiles");
-        console.log(result.data.data);
-        setAllImages(result.data.data);
-    }
+        try {
+            const authHeaders = getAuthHeaders();
+            const result = await axios.get('/pdf/getfiles', authHeaders);
+            setAllImages(result.data.data);
+        } catch (error) {
+            console.error('Error fetching PDFs:', error);
+            // Handle error response, e.g., expired token
+            if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+                localStorage.removeItem('token');
+                toast.error('Your session has expired. Please log in again.');
+                console.log(error)
+
+            }
+        }
+    };
 
     // Handle the form submission when user uploads a pdf. Creates a FormData containing the title and file, then append them to the form data. 
     const submitImage = async (e) => {
@@ -38,15 +61,25 @@ const PdfHandler = () => {
         formData.append("file", file);
         console.log(title, file)
 
-        // Send a post request to the server
-        const response = await axios.post("/pdf/upload", formData, {
-            headers: { "Content-Type": "multipart/form-data" }
-        }
-        );
-        console.log(response);
-        if (response.data.status == "ok") {
-            alert("Uploaded Successfully!");
-            getPdf()
+        // Get authentication headers
+        const authHeaders = getAuthHeaders();
+
+        // Send a post request to the server with authentication headers
+        try {
+            const response = await axios.post("/pdf/upload", formData, {
+                headers: {
+                    ...authHeaders.headers, // Include authentication headers
+                    "Content-Type": "multipart/form-data" // Set content type
+                }
+            });
+            console.log(response);
+            if (response.data.status == "ok") {
+                alert("Uploaded Successfully!");
+                getPdf()
+            }
+        } catch (error) {
+            console.error('Error uploading PDF:', error);
+            // Handle error response
         }
     }
 

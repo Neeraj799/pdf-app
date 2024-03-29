@@ -7,7 +7,7 @@ const pdfSchema = new mongoose.Schema({
         type: mongoose.Schema.Types.ObjectId,
         ref: 'User'
     }
-}, { collection: "PdfDetails" })
+});
 
 const PdfModel = mongoose.model("PdfDetails", pdfSchema)
 

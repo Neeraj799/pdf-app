@@ -10,14 +10,17 @@ const LogoutButton = () => {
         try {
             await axios.post('/logout');
             localStorage.removeItem('token');
-            navigate('/login'); // Redirect to the login page
+            navigate('/register'); // Redirect to the login page
         } catch (error) {
             console.error(error);
         }
     };
 
     return (
-        <button className='logoutButton' onClick={logoutUser}>Logout</button>
+        <div className='logoutButton'>
+            <button onClick={logoutUser}>Logout</button>
+        </div>
+
     );
 };
 

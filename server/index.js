@@ -3,7 +3,8 @@ const mongoose = require('mongoose')
 const cors = require('cors');
 const dotenv = require('dotenv')
 const userRoutes = require('./routes/authRoutes')
-const pdfRoutes = require('./routes/pdfRoutes')
+const pdfRoutes = require('./routes/pdfRoutes');
+const { validateUser } = require('./middlewares/authMiddleware');
 
 
 dotenv.config();
